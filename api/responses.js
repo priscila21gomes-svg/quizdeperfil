@@ -7,12 +7,14 @@
 //   ADMIN_PASSWORD            -> a senha do painel de administrador
 
 module.exports = async (req, res) => {
-  const URL = process.env.UPSTASH_REDIS_REST_URL;
-  const TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
+  // A integração Upstash/KV da Vercel pode criar essas variáveis com nomes
+  // diferentes dependendo de como foi conectada — aceitamos qualquer uma.
+  const URL = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+  const TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
   const ADMIN = process.env.ADMIN_PASSWORD;
 
   if (!URL || !TOKEN) {
-    res.status(500).json({ error: "missing_env", message: "Configure UPSTASH_REDIS_REST_URL e UPSTASH_REDIS_REST_TOKEN na Vercel." });
+    res.status(500).json({ error: "missing_env", message: "Não encontrei as variáveis do banco (UPSTASH_REDIS_REST_URL/KV_REST_API_URL e UPSTASH_REDIS_REST_TOKEN/KV_REST_API_TOKEN) na Vercel." });
     return;
   }
 
